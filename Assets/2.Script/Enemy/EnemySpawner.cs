@@ -1,13 +1,13 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab; // »ı¼ºÇÒ Àû ÇÁ¸®ÆÕ
-    public Transform spawnPoint; // ÀûÀÌ »ı¼ºµÉ À§Ä¡
-    public float spawnInterval = 2f; // Àû »ı¼º °£°İ
+    public Enemy enemyPrefab; 
+    public Transform spawnPoint;
+    public float spawnInterval = 2f; 
     public Transform parent;
 
     public List<Enemy> enemyPool;
@@ -19,11 +19,39 @@ public class EnemySpawner : MonoBehaviour
         StartCoroutine(SpawnEnemies());
     }
 
+    public void SetEnemyDead(Enemy temp) {
+
+        temp.gameObject.SetActive(false);
+        enemyPool.Remove(temp);
+        enemyDeadPool.Add(temp);
+    }
+
     IEnumerator SpawnEnemies()
     {
+
+
         while (true)
         {
-            SpawnEnemy();
+            Enemy enemy;
+            if (enemyDeadPool.Count > 0) // âœ… í’€ì—ì„œ ì  ì¬ì‚¬ìš©
+            {
+                enemy = enemyDeadPool[0];
+                enemyDeadPool.Remove(enemy);
+            }
+            else // âœ… ìƒˆë¡œìš´ ì  ìƒì„±
+            {
+                enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity, parent);
+            }
+
+            enemy.transform.position = spawnPoint.position; // âœ… ìœ„ì¹˜ ì„¤ì •
+            enemy.gameObject.SetActive(true); // âœ… ì  í™œì„±í™”
+            enemy.transform.SetParent(parent); // âœ… ë¶€ëª¨ ì„¤ì •
+            enemyPool.Add(enemy);
+
+
+            //            Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity, parent);
+
+            //           SpawnEnemy();
             yield return new WaitForSeconds(spawnInterval);
         }
     }

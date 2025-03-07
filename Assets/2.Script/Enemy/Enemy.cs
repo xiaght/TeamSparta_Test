@@ -18,8 +18,7 @@ public class Enemy : MonoBehaviour
         hp -= damage;
         hpui.SetHealth(hp, maxhp);
         if (hp <= 0) {
-
-            gameObject.SetActive(false);
+            SingletonManager.Instance.enemyspwa.SetEnemyDead(this);
         }
     
     }
@@ -27,13 +26,19 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0.5f; // 중력을 낮춰서 부드럽게 착지
+        rb.gravityScale = 0.5f; 
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
         float ran = Random.Range(-0.3f, 0.3f);
         moveSpeed += ran;
         maxhp = 5;
+
+    }
+
+    private void OnEnable()
+    {
         hp = 5;
+        hpui.SetHealth(hp, maxhp);
     }
     void Update()
     {
@@ -41,7 +46,7 @@ public class Enemy : MonoBehaviour
         CheckForObstacle();
     }
 
-    // 🔹 왼쪽으로 이동하는 코드
+
     void MoveLeft()
     {
 
@@ -51,36 +56,10 @@ public class Enemy : MonoBehaviour
         transform.position = newPosition;
 
 
-        //rb.velocity = new Vector2(-1, rb.velocity.y)*moveSpeed; // 왼쪽으로 이동
+        //rb.velocity = new Vector2(-1, rb.velocity.y)*moveSpeed; 
     }
 
 
-/*    private int stackedEnemies = 0;
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Enemy")) // 다른 적 감지
-        {
-            stackedEnemies++; // 위에 있는 적 개수 증가
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            stackedEnemies--; // 떠난 적 개수 감소
-        }
-    }
-*/
-
-
-
-
-
-
-
-    // 🔹 장애물 감지 & 올라가기
     void CheckForObstacle()
     {
         if (hasClimbed) return;
@@ -99,7 +78,6 @@ public class Enemy : MonoBehaviour
 
         Debug.Log("앞에 있는 적 수: " + detectedEnemies);
 
-        // ✅ 특정 개수 이상 적이 있을 때만 점프
         if (detectedEnemies >= 3 && aboveHit.collider == null)
         {
             StartCoroutine(SmoothClimb());
@@ -107,13 +85,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 🔹 부드럽게 위로 올라가는 코드
     IEnumerator SmoothClimb()
     {
-        float duration = 0.2f; // 올라가는 시간
+        float duration = 0.2f; 
         float elapsed = 0f;
         Vector3 startPos = transform.position;
-        Vector3 targetPos = startPos + new Vector3(0, 4f, 0); // 위로 이동
+        Vector3 targetPos = startPos + new Vector3(0, 4f, 0);
 
         while (elapsed < duration)
         {
@@ -128,7 +105,7 @@ public class Enemy : MonoBehaviour
     IEnumerator ResetClimbCooldown()
     {
         hasClimbed = true;
-        yield return new WaitForSeconds(climbCooldown); // ✅ 2초 동안 점프 금지
+        yield return new WaitForSeconds(climbCooldown); 
         hasClimbed = false;
     }
 
