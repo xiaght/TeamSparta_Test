@@ -13,6 +13,50 @@ public class Enemy : MonoBehaviour
     public int hp;
 
     public EnemyHealthUI hpui;
+
+
+    public float attackCooldown = 2f; 
+    public int damage = 10; 
+  public bool isAttacking = false;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && !isAttacking)
+        {
+
+            Debug.Log("공격");
+            Player temp = collision.gameObject.GetComponent<Player>();
+
+            StartCoroutine(AttackPlayer(temp));
+        }
+    }
+
+
+/*    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !isAttacking)
+        {
+
+            Debug.Log("공격");
+            Player temp = other.GetComponent<Player>();
+
+            StartCoroutine(AttackPlayer(temp));
+        }
+    }*/
+
+    IEnumerator AttackPlayer(Player player)
+    {
+        
+        isAttacking = true;
+        while (player != null && player.IsInvincible == false)
+        {
+            player.OnDamage(damage); // ✅ 플레이어에게 데미지 줌
+            yield return new WaitForSeconds(attackCooldown); // ✅ 일정 시간마다 공격
+        }
+        isAttacking = false;
+    }
+
+
     public void OnDamage(int damage) {
 
         hp -= damage;

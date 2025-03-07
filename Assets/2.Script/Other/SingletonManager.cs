@@ -8,6 +8,8 @@ public class SingletonManager : MonoBehaviour
 
     public Player player;
     public EnemySpawner enemyspwa;
+    public BackgroundScrolling background;
+    public UiManager ui;
 
 
     public static SingletonManager Instance

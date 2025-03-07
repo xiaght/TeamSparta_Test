@@ -12,6 +12,7 @@ public class BackgroundScrolling : MonoBehaviour
     void Start()
     {
         // Renderer에서 Material 가져오기
+        scrollSpeed = 0.1f;
         material = GetComponent<Renderer>().material;
     }
 
@@ -22,5 +23,11 @@ public class BackgroundScrolling : MonoBehaviour
 
         // Material의 메인 텍스처 오프셋 값을 변경하여 스크롤 효과 적용
         material.mainTextureOffset += offset;
+    }
+
+    public void StopScrolling() {
+        scrollSpeed = 0;
+        Debug.Log("멈춤");
+
     }
 }

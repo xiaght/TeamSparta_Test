@@ -2,25 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class EnemySpawner : MonoBehaviour
 {
-    public Enemy enemyPrefab; 
+    public Enemy enemyPrefab;
     public Transform spawnPoint;
-    public float spawnInterval = 2f; 
+    public Transform player; // ✅ 플레이어 위치 참조
+    public float spawnInterval = 2f;
     public Transform parent;
 
     public List<Enemy> enemyPool;
     public List<Enemy> enemyDeadPool;
 
+    public float moveSpeed = 2f; // ✅ 스포너 이동 속도
+    public float stopDistance = 3f; // ✅ 이동이 멈출 거리
 
-    void Start()
+    private bool hasStopped = false; // ✅ 멈춘 상태 체크
+
+    void Awake()
     {
         StartCoroutine(SpawnEnemies());
     }
 
-    public void SetEnemyDead(Enemy temp) {
+    private void Update()
+    {
+        if (!hasStopped) // ✅ 멈추지 않았을 때만 이동
+        {
+            MoveLeft();
 
+            // ✅ 플레이어와의 거리 계산
+            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+            if (distanceToPlayer <= stopDistance)
+            {
+                hasStopped = true; // ✅ 멈추기
+                SingletonManager.Instance.background.StopScrolling();
+            }
+        }
+    }
+
+    void MoveLeft()
+    {
+        Vector3 movement = new Vector2(-1, 0).normalized;
+        Vector2 newPosition = transform.position + movement * moveSpeed * Time.deltaTime;
+        transform.position = newPosition;
+    }
+
+    public void SetEnemyDead(Enemy temp)
+    {
         temp.gameObject.SetActive(false);
         enemyPool.Remove(temp);
         enemyDeadPool.Add(temp);
@@ -28,8 +56,6 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnEnemies()
     {
-
-
         while (true)
         {
             Enemy enemy;
@@ -48,16 +74,7 @@ public class EnemySpawner : MonoBehaviour
             enemy.transform.SetParent(parent); // ✅ 부모 설정
             enemyPool.Add(enemy);
 
-
-            //            Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity, parent);
-
-            //           SpawnEnemy();
             yield return new WaitForSeconds(spawnInterval);
         }
-    }
-
-    void SpawnEnemy()
-    {
-        Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity, parent);
     }
 }
