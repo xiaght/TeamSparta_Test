@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -11,6 +12,18 @@ public class Player : MonoBehaviour
     public float shotspeed = 1f;
     public List<Bullet> bulletPool;
     public List<Bullet> bulletDeadPool;
+
+
+
+    public Image hpSlider;
+    public int maxhp;
+    public int currenthp;
+
+
+    public void SetHealth(float currenthp, float maxhp)
+    {
+        hpSlider.fillAmount = currenthp / maxhp;
+    }
 
     private void Awake()
     {
