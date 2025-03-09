@@ -61,8 +61,8 @@ public class Enemy : MonoBehaviour
         isAttacking = true;
         while (player != null && player.IsInvincible == false)
         {
-            player.OnDamage(damage); // ✅ 플레이어에게 데미지 줌
-            yield return new WaitForSeconds(attackCooldown); // ✅ 일정 시간마다 공격
+            player.OnDamage(damage);
+            yield return new WaitForSeconds(attackCooldown); 
         }
         isAttacking = false;
     }
@@ -114,7 +114,7 @@ public class Enemy : MonoBehaviour
 
         /*        rb.AddForce(Vector2.left * moveSpeed, ForceMode2D.Force);
 
-                // ✅ 최대 속도 제한 (속도가 너무 빨라지지 않도록)
+              
                 if (rb.velocity.x < -maxSpeed)
                 {
                     rb.velocity = new Vector2(-maxSpeed, rb.velocity.y);
@@ -166,8 +166,7 @@ public class Enemy : MonoBehaviour
         Debug.DrawRay(transform.position + Vector3.up * 1.5f, Vector2.left * 1f, Color.blue); 
 
 
-    //    Debug.Log($"적 세대 {enemyGeneration}, Raycast 거리 {dynamicRaycastDistance}, 필요 적 수 {requiredEnemies}");
-
+   
 
         if (detectedEnemies >= requiredEnemies && aboveHit.collider == null)
         {

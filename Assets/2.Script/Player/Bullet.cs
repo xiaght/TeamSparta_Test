@@ -38,8 +38,6 @@ public class Bullet : MonoBehaviour
         yield return new WaitForSeconds(duration);
         gameObject.SetActive(false);
 
-//        SingletonManager.Instance.playerweapon.bulletPool.Remove(this);
-//        SingletonManager.Instance.playerweapon.bulletDeadPool.Add(this);
 
     }
 
@@ -58,16 +56,6 @@ public class Bullet : MonoBehaviour
             //  temp.gameObject.SetActive(false);
             SingletonManager.Instance.player.SetBulletDead(this);
             gameObject.SetActive(false);
-        }
-    }
-    public void LevelUp()
-    {
-        level++;
-        damage = Mathf.RoundToInt(damage * 1.15f);
-        speed *= 1.1f;
-        if (level % 3 == 0)
-        {
-            // 탄환 수 증가 로직 추가 필요 시 구현
         }
     }
 

@@ -6,18 +6,18 @@ public class EnemySpawner : MonoBehaviour
 {
     public Enemy enemyPrefab;
     public Transform spawnPoint;
-    public Transform player; // ✅ 플레이어 위치 참조
+    public Transform player; 
     public float spawnInterval = 2f;
     public Transform parent;
 
     public List<Enemy> enemyPool;
     public List<Enemy> enemyDeadPool;
 
-    public float moveSpeed = 2f; // ✅ 스포너 이동 속도
-    public float stopDistance = 3f; // ✅ 이동이 멈출 거리
+    public float moveSpeed = 2f; 
+    public float stopDistance = 3f;
     public int enemyGeneration;
     public int count;
-    private bool hasStopped = false; // ✅ 멈춘 상태 체크
+    private bool hasStopped = false; 
 
     void Awake()
     {
@@ -26,16 +26,15 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if (!hasStopped) // ✅ 멈추지 않았을 때만 이동
+        if (!hasStopped)
         {
             MoveLeft();
 
-            // ✅ 플레이어와의 거리 계산
             float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
             if (distanceToPlayer <= stopDistance)
             {
-                hasStopped = true; // ✅ 멈추기
+                hasStopped = true; 
                 SingletonManager.Instance.background.StopScrolling();
             }
         }
@@ -63,7 +62,7 @@ public class EnemySpawner : MonoBehaviour
             enemyGeneration=count/4;
                
             Enemy enemy;
-            if (enemyDeadPool.Count > 0) // ✅ 풀에서 적 재사용
+            if (enemyDeadPool.Count > 0) 
             {
                 enemy = enemyDeadPool[0];
                 enemyDeadPool.Remove(enemy);
@@ -75,9 +74,9 @@ public class EnemySpawner : MonoBehaviour
 
 
             enemy.enemyGeneration = enemyGeneration;
-            enemy.transform.position = spawnPoint.position; // ✅ 위치 설정
-            enemy.gameObject.SetActive(true); // ✅ 적 활성화
-            enemy.transform.SetParent(parent); // ✅ 부모 설정
+            enemy.transform.position = spawnPoint.position;
+            enemy.gameObject.SetActive(true); 
+            enemy.transform.SetParent(parent);
             enemyPool.Add(enemy);
 
             yield return new WaitForSeconds(spawnInterval);

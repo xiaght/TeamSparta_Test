@@ -20,8 +20,8 @@ public class Player : MonoBehaviour
     public int maxhp = 100;
     public  int currenthp;
     public bool IsInvincible { get; private set; } = false;
-    public float invincibilityDuration = 1f; // ✅ 피격 무적 시간
-    public Image screenEffect; // ✅ UI 효과 (흐릿함 or 빨간색 효과)
+    public float invincibilityDuration = 1f; 
+    public Image screenEffect;
 
     private SpriteRenderer spriteRenderer;
 
@@ -46,38 +46,36 @@ public class Player : MonoBehaviour
 
         
 
-        StartCoroutine(DamageEffect()); // ✅ 피격 효과 실행
-        StartCoroutine(Invincibility()); // ✅ 일정 시간 무적
+        StartCoroutine(DamageEffect()); 
+        StartCoroutine(Invincibility()); 
     }
 
     IEnumerator DamageEffect()
     {
-        // ✅ 피격 효과 (빨간색 또는 흐릿한 효과)
         if (screenEffect != null)
         {
-            screenEffect.color = new Color(1, 0, 0, 0.5f); // 빨간색 효과
+            screenEffect.color = new Color(1, 0, 0, 0.5f); 
         }
-        spriteRenderer.color = new Color(1, 0, 0, 1); // 캐릭터 색 변환
+        spriteRenderer.color = new Color(1, 0, 0, 1); 
 
-        yield return new WaitForSeconds(0.2f); // ✅ 0.2초간 유지
+        yield return new WaitForSeconds(0.2f);
 
         if (screenEffect != null)
         {
-            screenEffect.color = new Color(1, 0, 0, 0); // 원래대로
+            screenEffect.color = new Color(1, 0, 0, 0); 
         }
-        spriteRenderer.color = Color.white; // 캐릭터 원래 색상 복구
+        spriteRenderer.color = Color.white;
     }
 
     IEnumerator Invincibility()
     {
         IsInvincible = true;
-        yield return new WaitForSeconds(invincibilityDuration); // ✅ 무적 시간 유지
+        yield return new WaitForSeconds(invincibilityDuration); 
         IsInvincible = false;
     }
 
     void Die()
     {
-     //   Debug.Log("플레이어 사망");
         SingletonManager.Instance.ui.OnDieUi();
         // 사망 처리 (게임 오버 UI, 리스폰 등 추가 가능)
     }
@@ -163,7 +161,7 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right, raycastDistance, enemyLayer);
 
-        Debug.DrawRay(transform.position, Vector2.right * raycastDistance, Color.red); // 🔥 디버깅용
+        Debug.DrawRay(transform.position, Vector2.right * raycastDistance, Color.red); 
 
         foreach (RaycastHit2D hit in hits)
         {
@@ -173,7 +171,7 @@ public class Player : MonoBehaviour
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.hasClimbed = true; // ✅ 모든 감지된 적 점프 금지!
+                    enemy.hasClimbed = true; 
                 }
             }
         }
