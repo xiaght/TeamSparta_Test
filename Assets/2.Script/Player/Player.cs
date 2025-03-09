@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
     public List<Bullet> bulletPool;
     public List<Bullet> bulletDeadPool;
 
-
+    public LayerMask enemyLayer;
+    public int raycastDistance;
 
     public Image hpSlider;
     public int maxhp = 100;
@@ -76,7 +77,7 @@ public class Player : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("플레이어 사망");
+     //   Debug.Log("플레이어 사망");
         SingletonManager.Instance.ui.OnDieUi();
         // 사망 처리 (게임 오버 UI, 리스폰 등 추가 가능)
     }
@@ -85,7 +86,7 @@ public class Player : MonoBehaviour
     public void SetPlayerHp()
     {
         hpSlider.fillAmount = (float)currenthp / maxhp;
-        Debug.Log("현재 체력:"+currenthp / maxhp);
+   //     Debug.Log("현재 체력:"+currenthp / maxhp);
 
     }
 
@@ -149,5 +150,32 @@ public class Player : MonoBehaviour
 
 
 
+    }
+
+    void Update()
+    {
+        BlockEnemyJump();
+
+
+    }
+
+    void BlockEnemyJump()
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right, raycastDistance, enemyLayer);
+
+        Debug.DrawRay(transform.position, Vector2.right * raycastDistance, Color.red); // 🔥 디버깅용
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            Debug.Log(hit.collider.name);
+            if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+            {
+                Enemy enemy = hit.collider.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemy.hasClimbed = true; // ✅ 모든 감지된 적 점프 금지!
+                }
+            }
+        }
     }
 }

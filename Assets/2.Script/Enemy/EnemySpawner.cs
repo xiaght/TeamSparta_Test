@@ -15,7 +15,8 @@ public class EnemySpawner : MonoBehaviour
 
     public float moveSpeed = 2f; // ✅ 스포너 이동 속도
     public float stopDistance = 3f; // ✅ 이동이 멈출 거리
-
+    public int enemyGeneration;
+    public int count;
     private bool hasStopped = false; // ✅ 멈춘 상태 체크
 
     void Awake()
@@ -58,6 +59,9 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
+            count++;
+            enemyGeneration=count/4;
+               
             Enemy enemy;
             if (enemyDeadPool.Count > 0) // ✅ 풀에서 적 재사용
             {
@@ -69,6 +73,8 @@ public class EnemySpawner : MonoBehaviour
                 enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity, parent);
             }
 
+
+            enemy.enemyGeneration = enemyGeneration;
             enemy.transform.position = spawnPoint.position; // ✅ 위치 설정
             enemy.gameObject.SetActive(true); // ✅ 적 활성화
             enemy.transform.SetParent(parent); // ✅ 부모 설정

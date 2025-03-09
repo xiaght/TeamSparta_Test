@@ -6,9 +6,20 @@ public class Enemy : MonoBehaviour
 {
     Rigidbody2D rb;
     public float moveSpeed;
+
+    public float maxSpeed = 2f;
     public LayerMask obstacleLayer;  
-    private bool hasClimbed = false;
-    private float climbCooldown = 2f;
+    public bool hasClimbed = false;
+
+
+    public int enemyGeneration;
+
+
+
+
+
+
+    public float climbCooldown = 1f;
     public int maxhp;
     public int hp;
 
@@ -17,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     public float attackCooldown = 2f; 
     public int damage = 10; 
-  public bool isAttacking = false;
+    public bool isAttacking = false;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -70,12 +81,12 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0.5f; 
+   //     rb.gravityScale = 0.5f; 
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+  //      rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        float ran = Random.Range(-0.3f, 0.3f);
-        moveSpeed += ran;
         maxhp = 5;
+
 
     }
 
@@ -99,30 +110,66 @@ public class Enemy : MonoBehaviour
         Vector2 newPosition = transform.position + movement * moveSpeed * Time.deltaTime;
         transform.position = newPosition;
 
-
         //rb.velocity = new Vector2(-1, rb.velocity.y)*moveSpeed; 
+
+        /*        rb.AddForce(Vector2.left * moveSpeed, ForceMode2D.Force);
+
+                // ✅ 최대 속도 제한 (속도가 너무 빨라지지 않도록)
+                if (rb.velocity.x < -maxSpeed)
+                {
+                    rb.velocity = new Vector2(-maxSpeed, rb.velocity.y);
+                }*/
     }
+
+
+    private void UpdateMoving(Vector3 direction)
+    {
+        direction = MultiplyMyPlayerMoveSpeed(direction);
+
+        GetComponent<Rigidbody>().velocity = direction;
+    }
+     Vector3 MultiplyMyPlayerMoveSpeed(Vector3 direction)
+    {
+        Vector3 temp = new Vector2(-1, 0).normalized;
+        return temp;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     void CheckForObstacle()
     {
         if (hasClimbed) return;
-        // ✅ 왼쪽 방향으로 Raycast 쏘기 (오른쪽이 아니라!)
- //       RaycastHit2D frontHit = Physics2D.Raycast(transform.position + Vector3.up * 0.5f, Vector2.left, 1f, obstacleLayer);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position + Vector3.up * 1.5f, Vector2.left, 1f, obstacleLayer);
 
-        // ✅ 위쪽 공간 체크
-        RaycastHit2D aboveHit = Physics2D.Raycast(transform.position + Vector3.up * 3f, Vector2.left, 1f, obstacleLayer);
+        float dynamicRaycastDistance = 1f + enemyGeneration * 0.02f;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position + Vector3.up * 0.5f, Vector2.left, dynamicRaycastDistance, obstacleLayer);
 
-        // 🔥 Raycast 가시화
-        Debug.DrawRay(transform.position + Vector3.up * 1.5f, Vector2.left * 1f, Color.red); // 적 감지용
-        Debug.DrawRay(transform.position + Vector3.up * 3f, Vector2.left * 1f, Color.blue); // 위쪽 체크용
+        RaycastHit2D aboveHit = Physics2D.Raycast(transform.position + Vector3.up * 1.5f, Vector2.left, 1f, obstacleLayer);
 
-        int detectedEnemies = hits.Length; // 감지된 적 개수
 
-        Debug.Log("앞에 있는 적 수: " + detectedEnemies);
+        int detectedEnemies = hits.Length;
+        int requiredEnemies = 4 + enemyGeneration/2 ;
 
-        if (detectedEnemies >= 3 && aboveHit.collider == null)
+
+        Debug.DrawRay(transform.position + Vector3.up * 0.5f, Vector2.left * dynamicRaycastDistance, Color.red);
+        Debug.DrawRay(transform.position + Vector3.up * 1.5f, Vector2.left * 1f, Color.blue); 
+
+
+    //    Debug.Log($"적 세대 {enemyGeneration}, Raycast 거리 {dynamicRaycastDistance}, 필요 적 수 {requiredEnemies}");
+
+
+        if (detectedEnemies >= requiredEnemies && aboveHit.collider == null)
         {
             StartCoroutine(SmoothClimb());
             StartCoroutine(ResetClimbCooldown()); // 
@@ -134,7 +181,7 @@ public class Enemy : MonoBehaviour
         float duration = 0.2f; 
         float elapsed = 0f;
         Vector3 startPos = transform.position;
-        Vector3 targetPos = startPos + new Vector3(0, 4f, 0);
+        Vector3 targetPos = startPos + new Vector3(0, 1.5f, 0);
 
         while (elapsed < duration)
         {

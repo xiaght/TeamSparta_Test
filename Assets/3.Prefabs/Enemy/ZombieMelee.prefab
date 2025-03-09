@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 7938718327072608892}
   - component: {fileID: 3667029414770970621}
   - component: {fileID: 4737010829786516537}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ZombieMelee
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -378,13 +378,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 426fc2564610bec48b015c6b23f8ef79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  moveSpeed: 1.5
+  maxSpeed: 2
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
+  hasClimbed: 0
+  enemyGeneration: 0
   maxhp: 0
   hp: 0
   hpui: {fileID: 5005144655864229855}
+  attackCooldown: 2
+  damage: 10
+  isAttacking: 0
 --- !u!50 &3667029414770970621
 Rigidbody2D:
   serializedVersion: 4
@@ -469,7 +475,7 @@ GameObject:
   - component: {fileID: 832256689836721131}
   m_Layer: 6
   m_Name: bodyPivot
-  m_TagString: Untagged
+  m_TagString: Temp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -538,7 +544,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.5}
+  m_Size: {x: 0.2, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &6816727452595930646
 GameObject:
