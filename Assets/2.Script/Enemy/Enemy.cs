@@ -159,7 +159,7 @@ public class Enemy : MonoBehaviour
 
 
         int detectedEnemies = hits.Length;
-        int requiredEnemies = 4 + enemyGeneration/2 ;
+        int requiredEnemies = 4 + enemyGeneration/5 ;
 
 
         Debug.DrawRay(transform.position + Vector3.up * 0.5f, Vector2.left * dynamicRaycastDistance, Color.red);
